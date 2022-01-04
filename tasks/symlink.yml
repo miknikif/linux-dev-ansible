@@ -1,0 +1,10 @@
+---
+- name: Create symbolic links
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest | default('~/{{ item.src }}') }}"
+    owner: "{{ item.owner | default(ansible_user_id) }}"
+    group: "{{ item.group | default(ansible_real_group_id) }}"
+    force: "{{ item.force | default(false) }}"
+    state: link
+  loop: "{{ symlink_list }}"

@@ -25,3 +25,5 @@
     - import_tasks: tasks/linux_pass.yml
       when: configure_linux_pass
       tags: ['linux_pass']
+    - import_tasks: tasks/symlink.yml
+      tags: ['symlink']

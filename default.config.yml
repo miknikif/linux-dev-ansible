@@ -24,3 +24,5 @@ linux_pass_repo: https://github.com/miknikif/pass.git
 linux_pass_repo_accept_hostkey: true
 linux_pass_repo_local_destination: ~/.password_store
 linux_pass_repo_version: master
+
+symlink_list: []
