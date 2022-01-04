@@ -1,0 +1,7 @@
+---
+- name: restart gd-fuse
+  systemd:
+    daemon_reload: true
+    name: google-drive-ocamlfuse
+    state: restarted
+    enabled: true

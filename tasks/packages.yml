@@ -1,0 +1,55 @@
+---
+## TODO: replace with simple check instead of installing it
+- name: ensure pamac is installed
+  pacman: name=pamac state=present
+  become: true
+
+- name: "ensure EnableAUR in /etc/pamac.conf"
+  replace:
+    path: /etc/pamac.conf
+    regexp: "^#EnableAUR$"
+    replace: "EnableAUR"
+
+- name: "ensure CheckAURUpdates in /etc/pamac.conf"
+  replace:
+    path: /etc/pamac.conf
+    regexp: "^#CheckAURUpdates$"
+    replace: "CheckAURUpdates"
+
+- name: "ensure CheckAURVCSUpdates in /etc/pamac.conf"
+  replace:
+    path: /etc/pamac.conf
+    regexp: "^#CheckAURVCSUpdates$"
+    replace: "CheckAURVCSUpdates"
+
+- name: Get list of installed packages
+  shell: "pamac list -i | grep -vi aur | awk '{print $1}'"
+  changed_when: false
+  register: "pkg_list"
+
+- name: Get list of installed aur packages
+  shell: "pamac list -i | grep -i aur | awk '{print $1}'"
+  changed_when: false
+  register: "pkg_list_aur"
+
+- block:
+    - name: Ensure blacklisted applications are not installed
+      shell:
+        cmd: "pamac remove --no-confirm --no-save {{item}}"
+      when: item in pkg_list_aur.stdout_lines or item in pkg_list.stdout_lines
+      loop: "{{ packages_blacklisted_apps }}"
+      become: true
+
+    - name: Ensure applications are installed
+      shell:
+        cmd: "pamac install --no-confirm {{item}}"
+      when: item not in pkg_list.stdout_lines
+      loop: "{{ packages_apps }}"
+      become: true
+
+    - name: Ensure aur applications are installed
+      shell:
+        cmd: "pamac install --no-confirm {{item}}"
+      when: item not in pkg_list_aur.stdout_lines
+      loop: "{{ packages_aur_apps }}"
+      become: true

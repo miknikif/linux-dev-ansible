@@ -1,0 +1,27 @@
+---
+- hosts: all
+
+  vars_files:
+    - default.config.yml
+
+  pre_tasks:
+    - name: Include playbook configuration.
+      include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ['always']
+
+  roles:
+    - role: geerlingguy.dotfiles
+      when: configure_dotfiles
+      tags: ['dotfiles']
+
+  tasks:
+    - import_tasks: tasks/packages.yml
+      tags: ['packages']
+    - import_tasks: tasks/google_drive_ocamlfuse.yml
+      when: configure_google_drive_ocamlfuse
+      tags: ['google_drive_ocamlfuse']
+    - import_tasks: tasks/linux_pass.yml
+      when: configure_linux_pass
+      tags: ['linux_pass']

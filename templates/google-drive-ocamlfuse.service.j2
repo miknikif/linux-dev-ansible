@@ -1,0 +1,14 @@
+[Unit]
+Description=FUSE filesystem over Google Drive
+After=network.target
+
+[Service]
+User={{ ansible_user_id }}
+Group={{ ansible_user_id }}
+ExecStart=google-drive-ocamlfuse -label default {{ google_drive_ocamlfuse_mountpoint }}
+ExecStop=fusermount -u {{ google_drive_ocamlfuse_mountpoint }}
+Restart=always
+Type=forking
+
+[Install]
+WantedBy=multi-user.target

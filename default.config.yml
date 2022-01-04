@@ -1,0 +1,26 @@
+---
+downloads: ~/.ansible-downloads/
+
+configure_dotfiles: true
+configure_google_drive_ocamlfuse: true
+configure_linux_pass: true
+
+dotfiles_repo: https://gitlab.com/miknikif/dotfiles.git
+dotfiles_repo_accept_hostkey: true
+dotfiles_repo_local_destination: ~/dotfiles
+dotfiles_files:
+  - .zshrc
+  - .gitconfig
+  - .vimrc
+  - .config/alacritty
+
+packages_blacklisted_apps: []
+packages_apps: []
+packages_aur_apps: []
+
+google_drive_ocamlfuse_mountpoint: /home/miknikif/gdrive
+
+linux_pass_repo: https://github.com/miknikif/pass.git
+linux_pass_repo_accept_hostkey: true
+linux_pass_repo_local_destination: ~/.password_store
+linux_pass_repo_version: master

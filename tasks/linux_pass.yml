@@ -1,0 +1,7 @@
+---
+- name: Ensure linux_pass_repo repository is cloned locally.
+  git:
+    repo: "{{ linux_pass_repo }}"
+    dest: "{{ linux_pass_repo_local_destination }}"
+    version: "{{ linux_pass_repo_version }}"
+    accept_hostkey: "{{ linux_pass_repo_accept_hostkey }}"

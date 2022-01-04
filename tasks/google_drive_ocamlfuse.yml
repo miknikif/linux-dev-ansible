@@ -1,0 +1,33 @@
+---
+- name: Check that google-drive-ocamlfuse state file exists
+  stat:
+    path: "~/.gdfuse/default/state"
+    get_checksum: false
+  register: gd_state_stat
+
+- name: Get state file contents
+  shell:
+    cmd: "cat ~/.gdfuse/default/state"
+  register: gd_state_cat
+  changed_when: false
+  when: gd_state_stat.stat.exists
+
+- name: Check that google-drive-ocamlfuse token exists
+  fail:
+    msg: "You need to get token first"
+  when: "'last_access_token=' not in gd_state_cat.stdout or 'refresh_token=' not in gd_state_cat.stdout"
+
+- name: Make sure target folder exists
+  file:
+    path: "{{ google_drive_ocamlfuse_mountpoint }}"
+    state: directory
+
+- name: Place systemd service file template
+  template:
+    src: "templates/google-drive-ocamlfuse.service.j2"
+    dest: "/etc/systemd/system/google-drive-ocamlfuse.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart gd-fuse
+  become: true
