@@ -1,8 +1,13 @@
 ---
-## TODO: replace with simple check instead of installing it
-- name: ensure pamac is installed
-  pacman: name=pamac state=present
-  become: true
+- name: check pamac executable is present
+  shell: "which pamac"
+  register: pamac_check_result
+  changed_when: false
+  ignore_errors: true
+
+- fail:
+    msg: "Pamac is not found! You need to install it first."
+  when: pamac_check_result.rc != 0
 
 - name: "ensure EnableAUR in /etc/pamac.conf"
   replace:
